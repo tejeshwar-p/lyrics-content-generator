@@ -13,6 +13,7 @@ public class DDLColumnChunk {
     public static String DDL_TYPE_VARCHAR = "VARCHAR";
     public static String DDL_TYPE_TEXT = "TEXT";
     public static String DDL_TYPE_DATETIME = "DATETIME";
+    public static String SIZE_4 = "4";
     public static String SIZE_10 = "10";
     public static String SIZE_50 = "50";
     public static String SIZE_100 = "100";

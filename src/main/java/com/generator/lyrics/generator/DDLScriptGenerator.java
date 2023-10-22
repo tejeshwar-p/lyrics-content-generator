@@ -8,11 +8,10 @@ import com.generator.lyrics.model.DDLStatement;
 import java.util.Arrays;
 import java.util.List;
 
-public class DDLGenerator {
+public class DDLScriptGenerator {
 
     public String generateDDLScripts() {
         return generateLyricsLanguageTableDDL()
-                .concat(generateSongTableDDL())
                 .concat(generateSongTableDDL())
                 .concat(generateSongDetailsTableDDL())
                 .concat(generateSongTransliterationsTableDDL())
@@ -90,11 +89,14 @@ public class DDLGenerator {
                 DDLColumnChunk.SIZE_100, null, null, null, null);
         DDLColumnChunk composers = new DDLColumnChunk("composers", DDLColumnChunk.DDL_TYPE_VARCHAR,
                 DDLColumnChunk.SIZE_100, null, null, null, null);
-        DDLColumnChunk singers = new DDLColumnChunk("singers",
+        DDLColumnChunk singers = new DDLColumnChunk("artists",
                 DDLColumnChunk.DDL_TYPE_VARCHAR, DDLColumnChunk.SIZE_300, null, null, null,
                 null);
         DDLColumnChunk instruments = new DDLColumnChunk("instruments",
                 DDLColumnChunk.DDL_TYPE_VARCHAR, DDLColumnChunk.SIZE_300, null, null, null,
+                null);
+        DDLColumnChunk year = new DDLColumnChunk("year",
+                DDLColumnChunk.DDL_TYPE_VARCHAR, DDLColumnChunk.SIZE_4, null, null, null,
                 null);
         DDLColumnChunk createdBy = new DDLColumnChunk("created_by", DDLColumnChunk.DDL_TYPE_VARCHAR,
                 DDLColumnChunk.SIZE_50, DDLColumnChunk.DDL_NOT_NULL, null, null, null);
@@ -107,7 +109,7 @@ public class DDLGenerator {
         DDLConstraintChunk songIdConstraint = new DDLConstraintChunk("song_id", "song", "song_id");
         songDetailsDDL.setDdlCreateTableChunk(ddlCreateTableChunk);
         songDetailsDDL.setDdlColumnChunks(Arrays.asList(song_details_id, song_id, album, lyricist,
-                composers, singers, instruments, createdBy,
+                composers, singers, instruments, year, createdBy,
                 createdTimestamp, updatedBy, updatedTimestamp));
         songDetailsDDL.setDdlConstraintChunks(List.of(songIdConstraint));
         return songDetailsDDL.toString();

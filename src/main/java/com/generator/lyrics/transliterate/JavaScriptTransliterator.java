@@ -35,8 +35,7 @@ public class JavaScriptTransliterator {
 
     public static String getTransliteratedText(String textToTransliterate) {
 
-        textToTransliterate = textToTransliterate.replaceAll("<span>", "").replaceAll("</span>", "")
-                .replaceAll(" <br>", "").replaceAll("<br>", "").replaceAll("</br>", "");
+        textToTransliterate = cleanHTMLTagsFromText(textToTransliterate);
 
         String[] textToTransliterateSentences = textToTransliterate.split("\n");
         textToTransliterate = "";
@@ -119,6 +118,11 @@ public class JavaScriptTransliterator {
         //System.out.println(result);
         context.close();
         return result.asString();
+    }
+
+    private static String cleanHTMLTagsFromText(String textToTransliterate) {
+        return textToTransliterate.replaceAll("<span>", "").replaceAll("</span>", "")
+                .replaceAll(" <br>", "").replaceAll("<br>", "").replaceAll("</br>", "");
     }
 
     public static String getTransliteratedText2(String textToTransliterate) throws IOException {

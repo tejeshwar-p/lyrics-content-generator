@@ -1,54 +1,39 @@
 package com.generator.lyrics.generator;
 
+import com.generator.lyrics.converter.XlsxToPojoConverter;
+import com.generator.lyrics.model.SongSheetRow;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+@Slf4j
 public class ScriptGenerator {
+    private static final String inputFilePath = "D:\\MYCODE\\GITHUBCODE\\LYRICSCONTENTGENERATOR\\lyrics-content-generator\\Songs.xlsx";
+    private static final String outputFileName = "SongsDDLAndDMLScripts.sql";
 
-    private final String DDL_CREATE_TABLE = "CREATE TABLE ";
-    private final String DDL_PRIMARY_KEY = "PRIMARY KEY";
-    private final String DDL_FOREIGN_KEY = "FOREIGN KEY";
-    private final String DDL_REFERENCES = "REFERENCES";
-    private final String DDL_NOT_NULL = "NOT NULL";
-    private final String DDL_DEFAULT = "DEFAULT";
-    private final String DDL_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
-    private final String DDL_TYPE_BIGINT = "BIGINT";
-    private final String DDL_TYPE_VARCHAR = "VARCHAR";
-    private final String DDL_TYPE_TEXT = "TEXT";
-    private final String DDL_TYPE_DATETIME = "DATETIME";
+    public static void generateScripts() throws IOException {
+        log.info("Starting script generation");
+        DDLScriptGenerator ddlScriptGenerator = new DDLScriptGenerator();
+        String createTableDDLScripts = ddlScriptGenerator.generateDDLScripts();
 
-    private final String SIZE_50_BRACKET = "(50)";
-    private final String SIZE_100_BRACKET = "(100)";
-    private final String SIZE_3000_BRACKET = "(3000)";
-    private final String COMMA_SPACE = ", ";
-    private final String STARTING_BRACKET = "(";
-    private final String CLOSING_BRACKET = ")";
-    private final String SEMICOLON = ";";
-    private final String SPACE = " ";
-    private final String STARTING_BRACKET_SPACE = " (";
-    private final String CLOSING_BRACKET_SPACE = ") ";
-    private final String CLOSING_BRACKET_SEMICOLON = ");";
+        XlsxToPojoConverter xlsxToPojoConverter = new XlsxToPojoConverter();
+        List<SongSheetRow> songSheetRowList = xlsxToPojoConverter.convert(inputFilePath);
 
+        DMLScriptGenerator dmlScriptGenerator = new DMLScriptGenerator();
+        String insertIntoDMLScripts = dmlScriptGenerator.generateDMLScripts(songSheetRowList);
 
-    private final String DML_CREATED_BY_SYSTEM = "'SYSTEM'";
-    private final String DML_CREATED_TIMESTAMP = "CURRENT_TIMESTAMP";
-    private final String DML_INSERT_INTO = "INSERT INTO ";
-    private final String DML_VALUES_BRACKET = " VALUES (";
-
-    public static void main(String[] args) {
-        DDLGenerator ddlGenerator = new DDLGenerator();
-        String createTableDDLScripts = ddlGenerator.generateDDLScripts();
-        System.out.println(createTableDDLScripts);
+        writeToSQLFile(createTableDDLScripts, insertIntoDMLScripts);
     }
 
-    public void generateScripts() {
-        DDLGenerator ddlGenerator = new DDLGenerator();
-        String createTableDDLScripts = ddlGenerator.generateDDLScripts();
-        System.out.println(createTableDDLScripts);
-        /*DMLGenerator dmlGenerator = new DMLGenerator();
-        String insertIntoDDL = dmlGenerator.generateDMLScripts();
-        ddlGenerator.generateDDLScripts();*/
-    }
-
-    public void generateDMLScripts() {
-
+    public static void writeToSQLFile(String createTableDDLScripts, String insertIntoDMLScripts) throws IOException {
+        File file = new File(outputFileName);
+        FileUtils.writeStringToFile(file, createTableDDLScripts, "UTF-8");
+        FileUtils.writeStringToFile(file, insertIntoDMLScripts, "UTF-8", true);
+        log.info("Completed script generation");
+        log.info("Please find generated file at " + file.getAbsolutePath() + " location");
     }
 
 }
