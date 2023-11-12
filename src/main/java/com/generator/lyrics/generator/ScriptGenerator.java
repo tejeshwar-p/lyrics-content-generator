@@ -12,6 +12,7 @@ import java.util.List;
 @Slf4j
 public class ScriptGenerator {
     private static final String inputFilePath = "D:\\MYCODE\\GITHUBCODE\\LYRICSCONTENTGENERATOR\\lyrics-content-generator\\Songs.xlsx";
+    private static final String sheetName = "Bethesda Songs 12 November 2023";
     private static final String outputFileName = "SongsDDLAndDMLScripts.sql";
 
     public static void generateScripts() throws IOException {
@@ -20,7 +21,7 @@ public class ScriptGenerator {
         String createTableDDLScripts = ddlScriptGenerator.generateDDLScripts();
 
         XlsxToPojoConverter xlsxToPojoConverter = new XlsxToPojoConverter();
-        List<SongSheetRow> songSheetRowList = xlsxToPojoConverter.convert(inputFilePath);
+        List<SongSheetRow> songSheetRowList = xlsxToPojoConverter.convert(inputFilePath, sheetName);
 
         DMLScriptGenerator dmlScriptGenerator = new DMLScriptGenerator();
         String insertIntoDMLScripts = dmlScriptGenerator.generateDMLScripts(songSheetRowList);

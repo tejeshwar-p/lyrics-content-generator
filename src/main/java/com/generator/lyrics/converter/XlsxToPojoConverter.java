@@ -32,11 +32,11 @@ public class XlsxToPojoConverter {
         }
     }
 
-    public List<SongSheetRow> convert(String filePath) {
+    public List<SongSheetRow> convert(String filePath, String sheetName) {
         List<SongSheetRow> songSheetRows = null;
         try (FileInputStream fis = new FileInputStream(filePath);
              Workbook workbook = WorkbookFactory.create(fis)) {
-            Sheet sheet = workbook.getSheet("Bethesda Songs");
+            Sheet sheet = workbook.getSheet(sheetName);
 
             if (sheet != null) {
                 songSheetRows = new ArrayList<>();
@@ -51,7 +51,7 @@ public class XlsxToPojoConverter {
                     songSheetRows.add(songSheetRow);
                 }
             } else {
-                System.out.println("Sheet 'Bethesda Songs' not found in the Excel file.");
+                System.out.println("Sheet "+sheetName+" not found in the Excel file.");
             }
         } catch (IOException e) {
             e.printStackTrace();
